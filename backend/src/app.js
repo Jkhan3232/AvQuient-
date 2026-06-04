@@ -3,47 +3,12 @@ import cors from "cors";
 import express from "express";
 import morgan from "morgan";
 import logger from "./config/logger.js";
+import { isOriginAllowed } from "./config/cors.js";
 import { errorHandler, notFound } from "./middleware/errorMiddleware.js";
 import authRoutes from "./routes/authRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
 
 const app = express();
-
-const parseList = (...values) =>
-  values
-    .filter(Boolean)
-    .flatMap((value) => value.split(","))
-    .map((value) => value.trim())
-    .filter(Boolean);
-
-const allowedOrigins = new Set(
-  parseList(
-    process.env.CLIENT_URL,
-    process.env.CLIENT_URLS,
-    process.env.FRONTEND_URL,
-    process.env.FRONTEND_URLS,
-    "http://localhost:5173",
-    "http://localhost:5174",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:5174",
-    "https://avquient.pages.dev",
-  ),
-);
-
-const allowedOriginPatterns = parseList(process.env.CORS_ORIGIN_PATTERNS).map(
-  (pattern) => new RegExp(pattern),
-);
-
-const isOriginAllowed = (origin) => {
-  if (!origin) {
-    return true;
-  }
-
-  return (
-    allowedOrigins.has(origin) ||
-    allowedOriginPatterns.some((pattern) => pattern.test(origin))
-  );
-};
 
 const corsOptions = {
   origin(origin, callback) {
