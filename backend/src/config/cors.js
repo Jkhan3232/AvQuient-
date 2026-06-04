@@ -8,13 +8,8 @@ const parseList = (...values) =>
 const allowedOrigins = new Set(
   parseList(
     process.env.CLIENT_URL,
-    process.env.CLIENT_URLS,
-    process.env.FRONTEND_URL,
-    process.env.FRONTEND_URLS,
     "http://localhost:5173",
     "http://localhost:5174",
-    "http://127.0.0.1:5173",
-    "http://127.0.0.1:5174",
     "https://avquient.pages.dev",
   ),
 );
