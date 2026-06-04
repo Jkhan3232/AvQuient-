@@ -13,8 +13,12 @@ import { useAuth } from "../context/AuthContext";
 const TASK_LIMIT = 6;
 
 const getErrorMessage = (error) => {
+  if (!error.response) {
+    return "Unable to reach API. Check VITE_API_URL, CORS, and deployment protection.";
+  }
+
   const validationMessage = error.response?.data?.errors?.[0]?.message;
-  return validationMessage || error.response?.data?.message || "Unable to complete request.";
+  return validationMessage || error.response.data?.message || "Unable to complete request.";
 };
 
 const useDebouncedValue = (value, delay = 350) => {

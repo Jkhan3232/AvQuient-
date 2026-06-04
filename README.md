@@ -90,12 +90,14 @@ MONGO_URI=mongodb://127.0.0.1:27017/task_management_app
 JWT_SECRET=replace_this_with_a_long_random_secret
 JWT_EXPIRES_IN=7d
 CLIENT_URL=http://localhost:5173
+CLIENT_URLS=http://localhost:5173,http://localhost:5174,https://your-frontend-domain.com
+CORS_ORIGIN_PATTERNS=
 ```
 
 Frontend:
 
 ```bash
-VITE_API_URL=http://localhost:5000/api
+VITE_API_URL=https://av-quient-backend-git-main-jkhan3232s-projects.vercel.app/api
 ```
 
 ## API Endpoints
@@ -181,24 +183,48 @@ curl -X POST http://localhost:5000/api/tasks \
 
 ## Deployment
 
-Backend deployment options: Render, Railway, Fly.io, or a Node-capable VPS.
+Backend deployment options: Vercel, Render, Railway, Fly.io, or a Node-capable VPS.
 
 1. Set the backend root to `backend`.
 2. Build command: `npm install`.
-3. Start command: `npm start`.
-4. Add production environment variables:
+3. Start command for traditional Node hosting: `npm start`.
+4. For Vercel, keep the backend root as `backend`; `backend/api/index.js` and `backend/vercel.json` expose the Express app as a serverless function.
+5. If Vercel Deployment Protection is enabled, disable it for the API project or use a public production deployment URL. Protected preview URLs return Vercel's authentication page before Express runs, so browsers report the request as a CORS failure.
+6. Add production environment variables:
    - `NODE_ENV=production`
    - `MONGO_URI=<your MongoDB Atlas connection string>`
    - `JWT_SECRET=<long random secret>`
    - `JWT_EXPIRES_IN=7d`
-   - `CLIENT_URL=<your frontend URL>`
+   - `CLIENT_URL=<your primary frontend URL>`
+   - `CLIENT_URLS=<comma-separated allowed origins>`
 
-Frontend deployment options: Vercel, Netlify, Render Static Sites, or any static host.
+Example backend CORS env for a Cloudflare Pages frontend and local testing:
+
+```bash
+CLIENT_URL=https://avquient.pages.dev
+CLIENT_URLS=https://avquient.pages.dev,http://localhost:5173,http://localhost:5174
+```
+
+If you need Vercel preview frontend URLs, add a regex pattern:
+
+```bash
+CORS_ORIGIN_PATTERNS=^https://your-frontend-project-[a-z0-9-]+\\.vercel\\.app$
+```
+
+Frontend deployment options: Vercel, Cloudflare Pages, Netlify, Render Static Sites, or any static host.
 
 1. Set the frontend root to `frontend`.
 2. Build command: `npm run build`.
 3. Output directory: `dist`.
-4. Add `VITE_API_URL=<your deployed backend URL>/api`.
+4. Add `VITE_API_URL=<your public deployed backend URL>/api`.
+
+Example frontend env:
+
+```bash
+VITE_API_URL=https://av-quient-backend-git-main-jkhan3232s-projects.vercel.app/api
+```
+
+Do not point `VITE_API_URL` to a Vercel preview URL that shows an authentication page.
 
 MongoDB Atlas:
 

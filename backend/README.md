@@ -19,7 +19,15 @@ MONGO_URI=mongodb://127.0.0.1:27017/task_management_app
 JWT_SECRET=replace_this_with_a_long_random_secret
 JWT_EXPIRES_IN=7d
 CLIENT_URL=http://localhost:5173
+CLIENT_URLS=http://localhost:5173,http://localhost:5174,https://your-frontend-domain.com
+CORS_ORIGIN_PATTERNS=
 ```
+
+## Vercel Notes
+
+This backend includes `api/index.js` and `vercel.json` so Vercel can run the Express app as a serverless function. Set the Vercel project root to `backend`.
+
+If the deployed URL shows Vercel Authentication, disable Deployment Protection or use a public production deployment URL. That protection page is returned before Express runs, so CORS headers from this app cannot be added.
 
 ## Endpoints
 

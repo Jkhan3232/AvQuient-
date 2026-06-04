@@ -4,7 +4,13 @@ import toast from "react-hot-toast";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-const getErrorMessage = (error) => error.response?.data?.message || "Unable to complete request.";
+const getErrorMessage = (error) => {
+  if (!error.response) {
+    return "Unable to reach API. Check VITE_API_URL, CORS, and deployment protection.";
+  }
+
+  return error.response.data?.message || "Unable to complete request.";
+};
 
 const Register = () => {
   const { register: registerUser, isAuthenticated, authLoading } = useAuth();
