@@ -4,7 +4,7 @@ const api = axios.create({
   baseURL:
     import.meta.env.VITE_API_URL ||
     "https://av-quient-backend-git-main-jkhan3232s-projects.vercel.app/api",
-  timeout: 15000
+  timeout: 15000,
 });
 
 api.interceptors.request.use((config) => {

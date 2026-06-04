@@ -1,3 +1,5 @@
+import logger from "../config/logger.js";
+
 export const notFound = (req, _res, next) => {
   const error = new Error(`Route not found: ${req.originalUrl}`);
   error.statusCode = 404;
@@ -23,7 +25,7 @@ export const errorHandler = (err, _req, res, _next) => {
     message = "Validation failed.";
     errors = Object.values(err.errors).map((item) => ({
       field: item.path,
-      message: item.message
+      message: item.message,
     }));
   }
 
@@ -36,12 +38,20 @@ export const errorHandler = (err, _req, res, _next) => {
   const response = {
     success: false,
     message,
-    ...(errors ? { errors } : {})
+    ...(errors ? { errors } : {}),
   };
 
   if (process.env.NODE_ENV !== "production") {
     response.stack = err.stack;
   }
+
+  logger.error(message, {
+    statusCode,
+    method: _req.method,
+    url: _req.originalUrl,
+    ip: _req.ip,
+    stack: err.stack,
+  });
 
   res.status(statusCode).json(response);
 };
